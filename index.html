@@ -4,59 +4,1275 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital Boss Alex — Content Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --cream: #FAF7F2;
+      --warm: #F2EDE4;
+      --gold: #C9A96E;
+      --gold-light: #E8D5B0;
+      --gold-dark: #A8885A;
+      --charcoal: #2C2A26;
+      --ash: #5A5750;
+      --silver: #9A9590;
+      --border: #E2DDD6;
+      --white: #FEFCF9;
+      --pink: #F0D6E8;
+      --pink-dark: #C4899E;
+      --success: #6D9272;
+      --danger-bg: #FDF0EE;
+      --danger-border: #E8C4BE;
+      --danger-text: #8A4A42;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #faf7f2;
-      color: #2c2a26;
+      background: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      color: var(--charcoal);
+      min-height: 100vh;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--charcoal);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 16px 24px;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--silver);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    header {
+      background: var(--charcoal);
+      padding: 56px 40px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 25% 50%, rgba(201,169,110,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 50%, rgba(201,169,110,0.06) 0%, transparent 55%);
+    }
+
+    .header-tag {
+      font-size: 9px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 6vw, 60px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 em { font-style: italic; color: var(--gold); }
+
+    .header-sub {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .gold-rule {
+      width: 36px;
+      height: 1px;
+      background: var(--gold);
+      margin: 18px auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      display: none;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 30px 80px;
+    }
+
+    .section.visible { display: block; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .section-tag {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 300;
+      line-height: 1.15;
+    }
+
+    .section-title em { font-style: italic; color: var(--gold-dark); }
+
+    .gen-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: sticky;
+      top: 64px;
+    }
+
+    .panel-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .panel-section { margin-bottom: 24px; }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .type-btn {
+      padding: 11px 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--cream);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      font-family: 'Jost', sans-serif;
+    }
+
+    .type-btn:hover { border-color: var(--gold); background: var(--warm); }
+    .type-btn.selected { border-color: var(--gold); background: var(--charcoal); }
+    .type-btn .type-icon { font-size: 18px; display: block; margin-bottom: 5px; }
+    .type-btn .type-name {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ash);
+      display: block;
+    }
+    .type-btn.selected .type-name { color: var(--gold); }
+
+    .pillar-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pillar-btn {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--cream);
+      cursor: pointer;
+      text-align: left;
+      font-size: 12px;
+      color: var(--ash);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .pillar-btn:hover { border-color: var(--gold); background: var(--warm); }
+    .pillar-btn.selected { border-color: var(--gold); background: var(--charcoal); color: var(--gold); }
+    .pillar-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    .topic-input,
+    .endpoint-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--charcoal);
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+
+    .topic-input:focus,
+    .endpoint-input:focus { border-color: var(--gold); }
+    .topic-input::placeholder,
+    .endpoint-input::placeholder { color: var(--silver); }
+
+    .helper-copy {
+      margin-top: 8px;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--silver);
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--gold);
+      border: none;
+      border-radius: 12px;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .generate-btn:hover { background: var(--gold-dark); color: white; }
+    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .generate-btn .btn-loading { display: none; align-items: center; justify-content: center; gap: 8px; }
+    .generate-btn.loading .btn-text { display: none; }
+    .generate-btn.loading .btn-loading { display: flex; }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(44,42,38,0.3);
+      border-top-color: var(--charcoal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .output-area { display: flex; flex-direction: column; gap: 20px; }
+
+    .output-empty {
+      background: var(--white);
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      padding: 70px 40px;
+      text-align: center;
+    }
+
+    .output-empty .empty-icon { font-size: 36px; margin-bottom: 18px; opacity: 0.35; }
+    .output-empty h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--ash);
+      margin-bottom: 8px;
+    }
+    .output-empty p { font-size: 12px; color: var(--silver); line-height: 1.7; }
+
+    .status-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--ash);
+    }
+
+    .status-box strong { color: var(--charcoal); }
+    .status-box.error {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .content-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: var(--charcoal);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card-type-badge {
+      font-size: 8px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,169,110,0.4);
+      padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .card-pillar-badge {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.45);
+    }
+
+    .copy-all-btn,
+    .post-copy-btn,
+    .sales-copy-btn {
+      background: rgba(201,169,110,0.15);
+      border: 1px solid rgba(201,169,110,0.3);
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .copy-all-btn:hover,
+    .post-copy-btn:hover,
+    .sales-copy-btn:hover { background: rgba(201,169,110,0.25); }
+
+    .card-body { padding: 26px; }
+
+    .content-section {
+      margin-bottom: 22px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .content-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .section-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .content-section-label,
+    .post-col-label,
+    .sales-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--silver);
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .copy-btn.copied,
+    .copy-all-btn.copied,
+    .post-copy-btn.copied,
+    .sales-copy-btn.copied {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .content-text {
+      font-size: 13.5px;
+      line-height: 1.85;
+      color: var(--ash);
+      white-space: pre-line;
+    }
+
+    .slides-list,
+    .post-slides {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .slide-item,
+    .post-slide {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 15px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .slide-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--charcoal);
+      color: var(--gold);
+      font-size: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 40px;
-      box-sizing: border-box;
+      flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
     }
-    .card {
-      background: white;
-      border: 1px solid #e2ddd6;
-      border-radius: 18px;
-      padding: 32px;
-      max-width: 700px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    }
-    h1 {
-      margin-top: 0;
-      font-size: 36px;
-    }
-    p {
-      line-height: 1.7;
-      font-size: 16px;
-    }
-    .tag {
-      font-size: 12px;
+
+    .slide-content { flex: 1; }
+
+    .slide-role,
+    .post-slide-role {
+      font-size: 8px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #a8885a;
-      margin-bottom: 12px;
+      color: var(--gold-dark);
+      margin-bottom: 4px;
     }
-    .endpoint {
-      margin-top: 20px;
-      padding: 14px;
-      background: #f2ede4;
+
+    .slide-text,
+    .post-slide-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--charcoal);
+    }
+
+    .hashtag-text,
+    .post-tags {
+      font-size: 12px;
+      color: var(--gold-dark);
+      line-height: 2;
+    }
+
+    .posts-grid { display: flex; flex-direction: column; gap: 32px; }
+
+    .post-block,
+    .sales-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .post-block-header,
+    .sales-card-header {
+      background: var(--charcoal);
+      padding: 18px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .post-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .post-type-tag {
+      font-size: 8px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.45);
+    }
+
+    .post-block-body {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .post-caption {
+      font-size: 13px;
+      line-height: 1.9;
+      color: var(--ash);
+      white-space: pre-line;
+    }
+
+    .post-caption-wrap { display: flex; flex-direction: column; }
+
+    .post-tags {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+    }
+
+    .sales-layout { max-width: 760px; margin: 0 auto; }
+
+    .sales-card-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .sales-card-body { padding: 36px; }
+    .sales-caption { font-size: 14px; line-height: 2; color: var(--ash); white-space: pre-line; }
+
+    .sales-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    .offer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .offer-pill {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11px;
+      color: var(--ash);
+    }
+
+    .offer-pill span { color: var(--gold-dark); margin-right: 4px; }
+
+    .price-block {
+      background: var(--charcoal);
       border-radius: 12px;
-      font-family: monospace;
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .price-was { font-size: 11px; color: var(--silver); text-decoration: line-through; }
+    .price-now {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .price-badge {
+      background: var(--gold);
+      color: var(--charcoal);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .cta-note { font-size: 11px; color: var(--silver); margin-top: 8px; }
+
+    @media (max-width: 800px) {
+      .gen-layout { grid-template-columns: 1fr; }
+      .panel { position: static; }
+      .post-block-body { grid-template-columns: 1fr; }
+      .section { padding: 30px 16px 60px; }
+      .nav-btn { padding: 14px 12px; font-size: 8px; letter-spacing: 2px; }
+      header { padding: 42px 20px 36px; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="tag">Digital Boss Alex</div>
-    <h1>Content Hub is live</h1>
-    <p>Your Vercel project is connected correctly.</p>
-    <p>The backend file is in place, and the next step is replacing this starter page with your full Content Hub interface.</p>
-    <div class="endpoint">API endpoint ready at: /api/generate</div>
+  <nav class="top-nav">
+    <button class="nav-btn active" data-section="generator">AI Generator</button>
+    <button class="nav-btn" data-section="posts">3 Promo Posts</button>
+    <button class="nav-btn" data-section="sales">Sales Caption</button>
+  </nav>
+
+  <header>
+    <div class="header-tag">@digitalbossalex · Content Hub</div>
+    <h1>Your Brand,<br><em>Fully Loaded</em></h1>
+    <div class="gold-rule"></div>
+    <div class="header-sub">AI Generator · Promo Posts · Master Sales Caption</div>
+  </header>
+
+  <div class="section visible" id="generator">
+    <div class="section-header">
+      <div class="section-tag">Backend-Ready Version</div>
+      <div class="section-title">Content <em>Generator</em></div>
+    </div>
+
+    <div class="gen-layout">
+      <div class="panel">
+        <div class="panel-section">
+          <span class="panel-label">API Endpoint</span>
+          <input class="endpoint-input" id="apiEndpoint" value="/api/generate" />
+          <div class="helper-copy">Use <strong>/api/generate</strong> on Vercel. Change this only if your backend lives somewhere else.</div>
+        </div>
+
+        <div class="panel-section">
+          <span class="panel-label">Post Type</span>
+          <div class="type-grid">
+            <button class="type-btn selected" data-type="carousel"><span class="type-icon">🎠</span><span class="type-name">Carousel</span></button>
+            <button class="type-btn" data-type="reel"><span class="type-icon">🎬</span><span class="type-name">Reel</span></button>
+            <button class="type-btn" data-type="static"><span class="type-icon">🖼️</span><span class="type-name">Static</span></button>
+            <button class="type-btn" data-type="story"><span class="type-icon">📱</span><span class="type-name">Story</span></button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <span class="panel-label">Content Pillar</span>
+          <div class="pillar-grid">
+            <button class="pillar-btn selected" data-pillar="authority"><div class="pillar-dot" style="background:#C9A96E"></div>Authority — Build trust</button>
+            <button class="pillar-btn" data-pillar="callout"><div class="pillar-dot" style="background:#C4B5B5"></div>Call-Out — Stop the scroll</button>
+            <button class="pillar-btn" data-pillar="value"><div class="pillar-dot" style="background:#B5C4B1"></div>Value — Teach something real</button>
+            <button class="pillar-btn" data-pillar="lifestyle"><div class="pillar-dot" style="background:#B5BEC4"></div>Lifestyle — Sell the dream</button>
+            <button class="pillar-btn" data-pillar="freebie"><div class="pillar-dot" style="background:#D4B5C4"></div>Freebie — Drive downloads</button>
+            <button class="pillar-btn" data-pillar="workbook"><div class="pillar-dot" style="background:#C9A96E"></div>Workbook Suite — $26 offer</button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <span class="panel-label">Topic / Angle <span style="color:var(--silver);font-size:8px;">(optional)</span></span>
+          <textarea class="topic-input" id="topicInput" rows="3" placeholder="e.g. why faceless brands fail, how to turn content into income, building a brand system from scratch..."></textarea>
+        </div>
+
+        <button class="generate-btn" id="generateBtn">
+          <span class="btn-text">Generate Content</span>
+          <span class="btn-loading"><div class="spinner"></div>Generating...</span>
+        </button>
+      </div>
+
+      <div class="output-area" id="outputArea">
+        <div class="status-box" id="statusBox">
+          <strong>Setup note:</strong> this front-end is ready, but the button needs a live backend endpoint. Point it to <strong>/api/generate</strong> on Vercel and it will run.
+        </div>
+        <div class="output-empty" id="emptyState">
+          <div class="empty-icon">✦</div>
+          <h3>Ready to create</h3>
+          <p>Pick your post type and pillar,<br>hit Generate — content in seconds.</p>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="section" id="posts">
+    <div class="section-header">
+      <div class="section-tag">The $26 Workbook Suite · Ready to Post</div>
+      <div class="section-title">3 <em>Promo Posts</em></div>
+    </div>
+
+    <div class="posts-grid">
+      <div class="post-block">
+        <div class="post-block-header">
+          <div>
+            <div class="post-num">Post 01</div>
+            <div class="post-type-tag">Carousel · Authority → Soft Sell</div>
+          </div>
+          <button class="post-copy-btn" data-copy-target="post1caption">Copy Caption</button>
+        </div>
+        <div class="post-block-body">
+          <div>
+            <div class="post-col-label">Slide Copy</div>
+            <div class="post-slides">
+              <div class="post-slide"><div><div class="post-slide-role">Cover</div><div class="post-slide-text">Your brand isn't unclear because you're not working hard enough. It's unclear because you don't have a system.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Problem</div><div class="post-slide-text">Most people post content without a brand foundation. No positioning. No identity. No offer path. Just vibes and hope.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Reframe</div><div class="post-slide-text">A brand isn't an aesthetic. It's a system. Identity + Positioning + Content + Offers + Conversion. All connected.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Solution</div><div class="post-slide-text">When those pieces work together, your content gets clearer. Your audience grows faster. And your offers actually sell.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">CTA</div><div class="post-slide-text">I built the entire system into 8 workbooks. $26. Link in bio.</div></div></div>
+            </div>
+          </div>
+          <div class="post-caption-wrap">
+            <div class="post-col-label">Caption</div>
+            <div class="post-caption" id="post1caption">If your brand feels scattered, unclear, or like it's not going anywhere —
+
+It's not a you problem.
+It's a system problem.
+
+Most people build their brand backwards.
+They focus on content before they've locked their identity.
+They post offers before they've built trust.
+They try to convert before they've created clarity.
+
+And then they wonder why nothing's working.
+
+Here's what I know for sure:
+
+When your brand has a real system behind it —
+clear identity, intentional positioning, a content structure that builds trust,
+and an offer path that makes sense —
+everything gets easier.
+
+The content flows.
+The right people find you.
+And the sales start to feel natural instead of forced.
+
+I built that system into 8 workbooks.
+From brand identity all the way through to conversion.
+
+It's called the Faceless Brand Operating System.
+And it's $26.
+
+Link in bio — or DM me SYSTEM and I'll send you straight there.
+
+Save this if it resonated.</div>
+            <div class="post-tags">#facelessbrand #facelessmarketing #digitalbossalex #onlinebusiness #contentstrategy #brandstrategy #digitalproducts #passiveincome #instagramgrowth #contentthatconverts</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-block">
+        <div class="post-block-header">
+          <div>
+            <div class="post-num">Post 02</div>
+            <div class="post-type-tag">Reel · Call-Out → Direct Sell</div>
+          </div>
+          <button class="post-copy-btn" data-copy-target="post2caption">Copy Caption</button>
+        </div>
+        <div class="post-block-body">
+          <div>
+            <div class="post-col-label">Text Overlays (staggered)</div>
+            <div class="post-slides">
+              <div class="post-slide"><div><div class="post-slide-role">Line 1 — Hook</div><div class="post-slide-text">Your brand isn't growing because it's unclear.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Line 2</div><div class="post-slide-text">Not your content. Not your niche. Not your aesthetic.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Line 3</div><div class="post-slide-text">You're missing the system underneath it all.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Line 4 — CTA</div><div class="post-slide-text">I built the fix. 8 workbooks. $26. Link in bio.</div></div></div>
+            </div>
+          </div>
+          <div class="post-caption-wrap">
+            <div class="post-col-label">Caption</div>
+            <div class="post-caption" id="post2caption">The hard truth?
+
+You don't have a content problem.
+You don't have a consistency problem.
+You don't have a niche problem.
+
+You have a brand system problem.
+
+And without a system —
+your content can't convert,
+your audience can't trust you fast enough,
+and your offers can't land the way they should.
+
+That's exactly why I built the Faceless Brand Operating System.
+
+8 workbooks that walk you through every layer of building a brand that actually works:
+
+→ Brand Identity
+→ Positioning
+→ Content Pillars
+→ Content Architecture
+→ Offer Ladder
+→ Launch Planner
+→ Conversion System
+→ Start Here Guide
+
+Everything in order. Nothing missing.
+
+It's $26. Early buyers get all future vault additions free.
+
+Link in bio — or DM me WORKBOOK.</div>
+            <div class="post-tags">#digitalbossalex #facelessbrand #facelessmarketing #onlinebusiness #digitalproducts #brandstrategy #contentstrategy #instagramgrowth #passiveincome #workbook</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-block">
+        <div class="post-block-header">
+          <div>
+            <div class="post-num">Post 03</div>
+            <div class="post-type-tag">Static or Reel · Lifestyle → Conversion</div>
+          </div>
+          <button class="post-copy-btn" data-copy-target="post3caption">Copy Caption</button>
+        </div>
+        <div class="post-block-body">
+          <div>
+            <div class="post-col-label">Image / Slide Text</div>
+            <div class="post-slides">
+              <div class="post-slide"><div><div class="post-slide-role">Main Text</div><div class="post-slide-text">What changes when your brand has a real system behind it.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Visual Direction</div><div class="post-slide-text">Aspirational lifestyle image — clean desk, morning light, aesthetic workspace. Cream/neutral tones. Text overlay in gold or charcoal. Minimal.</div></div></div>
+              <div class="post-slide"><div><div class="post-slide-role">Subtext (optional)</div><div class="post-slide-text">Clarity. Consistency. Conversion. @digitalbossalex</div></div></div>
+            </div>
+          </div>
+          <div class="post-caption-wrap">
+            <div class="post-col-label">Caption</div>
+            <div class="post-caption" id="post3caption">When your brand has a system behind it, everything shifts.
+
+You stop guessing what to post.
+You stop wondering why nothing's converting.
+You stop feeling like you're starting over every week.
+
+Instead:
+
+Your content has direction.
+Your audience knows exactly what you stand for.
+Your offers make sense to the people finding you.
+And growth starts to feel intentional — not random.
+
+That's what I built the Faceless Brand Operating System for.
+
+Not just another guide.
+A real operating system — 8 workbooks that build on each other —
+so your brand has a foundation that actually holds.
+
+Identity → Positioning → Content → Offers → Conversion.
+
+All of it. $26.
+Early buyers get future vault additions free.
+
+If your brand feels full of potential but missing structure —
+this was made for you.
+
+Link in bio. Or DM me SYSTEM and I'll send you there directly.</div>
+            <div class="post-tags">#digitalbossalex #facelessbrand #onlinebusiness #digitalproducts #brandstrategy #facelessmarketing #contentstrategy #passiveincome #instagramgrowth #contentthatconverts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sales">
+    <div class="section-header">
+      <div class="section-tag">The Faceless Brand Operating System · $26</div>
+      <div class="section-title">Master <em>Sales Caption</em></div>
+    </div>
+
+    <div class="sales-layout">
+      <div class="sales-card">
+        <div class="sales-card-header">
+          <h3>Full Sales Caption</h3>
+          <button class="sales-copy-btn" data-copy-target="salesCaption">Copy Caption</button>
+        </div>
+        <div class="sales-card-body">
+          <div class="sales-label">Use this for your launch post, pinned post, or link-in-bio promo</div>
+
+          <div class="sales-caption" id="salesCaption">Let me be honest with you.
+
+Most people building a faceless brand aren't failing because they're lazy, untalented, or posting in the wrong niche.
+
+They're failing because they're building on a broken foundation.
+
+No clear identity.
+No positioning that makes them stand out.
+No content system that builds trust over time.
+No offer path that makes sense to the people watching.
+
+And without those things — it doesn't matter how much you post.
+The growth won't come. The conversions won't happen.
+And eventually, you burn out wondering what you're doing wrong.
+
+That's why I built the Faceless Brand Operating System.
+
+Not a course. Not a PDF with vague advice.
+A real, structured operating system — 8 premium workbooks that walk you through every piece of building a brand that actually works.
+
+Here's what's inside:
+
+✦ Start Here Guide — the order of operations, so you build smart from day one
+✦ Brand Identity Workbook — who you are, what you stand for, what makes you magnetic
+✦ Positioning Workbook — how to stand out in a crowded space and own a clear corner
+✦ Content Pillar Workbook — the four pillars that make your content work harder
+✦ Content Architecture Workbook — how to structure content so it builds trust and converts
+✦ Offer Ladder Workbook — map your offers from freebie to paid so the path makes sense
+✦ Launch Planner Workbook — how to launch with intention instead of winging it
+✦ Conversion System Workbook — turn attention into conversations, and conversations into sales
+
+Every workbook builds on the last.
+By the end, you don't just have content — you have a brand system.
+
+This is for you if your brand feels:
+→ Unclear or hard to explain
+→ Inconsistent no matter how much you post
+→ Full of potential but missing structure
+→ Like it should be converting more than it is
+
+Early buyers also get every future vault addition as it's released — free.
+
+It's $26.
+That's less than a dinner out for a system that changes how your entire brand operates.
+
+Link in bio — or DM me SYSTEM and I'll send you straight there.
+
+If this hit, save it and share it with someone who needs to hear it.</div>
+
+          <div class="sales-divider"></div>
+
+          <div class="sales-label">What's Inside (8 Workbooks)</div>
+          <div class="offer-pills">
+            <div class="offer-pill"><span>01</span> Start Here Guide</div>
+            <div class="offer-pill"><span>02</span> Brand Identity Workbook</div>
+            <div class="offer-pill"><span>03</span> Positioning Workbook</div>
+            <div class="offer-pill"><span>04</span> Content Pillar Workbook</div>
+            <div class="offer-pill"><span>05</span> Content Architecture Workbook</div>
+            <div class="offer-pill"><span>06</span> Offer Ladder Workbook</div>
+            <div class="offer-pill"><span>07</span> Launch Planner Workbook</div>
+            <div class="offer-pill"><span>08</span> Conversion System Workbook</div>
+          </div>
+
+          <div class="price-block">
+            <div>
+              <div class="price-was">$37</div>
+              <div class="price-now">$26</div>
+              <div class="cta-note">Early buyers get future vault additions free</div>
+            </div>
+            <div>
+              <div class="price-badge">30% Off · Limited</div>
+            </div>
+          </div>
+
+          <div class="sales-divider"></div>
+
+          <div class="sales-label">DM Trigger Words</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+            <div class="offer-pill">DM "SYSTEM"</div>
+            <div class="offer-pill">DM "WORKBOOK"</div>
+            <div class="offer-pill">DM "FREE"</div>
+            <div class="offer-pill">Link in bio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedType = 'carousel';
+    let selectedPillar = 'authority';
+
+    const typeButtons = document.querySelectorAll('[data-type]');
+    const pillarButtons = document.querySelectorAll('[data-pillar]');
+    const navButtons = document.querySelectorAll('[data-section]');
+    const outputArea = document.getElementById('outputArea');
+    const emptyState = document.getElementById('emptyState');
+    const statusBox = document.getElementById('statusBox');
+    const generateBtn = document.getElementById('generateBtn');
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener('click', () => showSection(btn.dataset.section));
+    });
+
+    typeButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        typeButtons.forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedType = btn.dataset.type;
+      });
+    });
+
+    pillarButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        pillarButtons.forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedPillar = btn.dataset.pillar;
+      });
+    });
+
+    document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const target = document.getElementById(btn.dataset.copyTarget);
+        if (!target) return;
+        await copyText(btn, target.innerText.trim());
+      });
+    });
+
+    generateBtn.addEventListener('click', generateContent);
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach((section) => section.classList.remove('visible'));
+      document.getElementById(id).classList.add('visible');
+      navButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.section === id));
+      const topOffset = document.querySelector('.top-nav').offsetHeight + document.querySelector('header').offsetHeight;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    }
+
+    async function generateContent() {
+      const endpoint = document.getElementById('apiEndpoint').value.trim();
+      const topic = document.getElementById('topicInput').value.trim();
+
+      if (!endpoint) {
+        setStatus('Please enter an API endpoint first.', true);
+        return;
+      }
+
+      generateBtn.classList.add('loading');
+      generateBtn.disabled = true;
+      setStatus('Generating content...', false);
+      if (emptyState) emptyState.style.display = 'none';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: selectedType,
+            pillar: selectedPillar,
+            topic,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          const message = data?.error?.message || data?.details || data?.error || 'Request failed.';
+          throw new Error(typeof message === 'string' ? message : JSON.stringify(message));
+        }
+
+        const parsed = normalizeResponse(data);
+        renderCard(parsed, selectedType, selectedPillar);
+        setStatus('Content generated successfully.', false);
+      } catch (error) {
+        console.error(error);
+        setStatus(error.message || 'Something went wrong.', true);
+        if (document.querySelectorAll('.content-card').length === 0 && emptyState) {
+          emptyState.style.display = 'block';
+        }
+      } finally {
+        generateBtn.classList.remove('loading');
+        generateBtn.disabled = false;
+      }
+    }
+
+    function normalizeResponse(data) {
+      if (data.result && typeof data.result === 'object') return data.result;
+      if (data.content && Array.isArray(data.content)) {
+        const raw = data.content.map((item) => item.text || '').join('').trim();
+        return safeParseJSON(raw);
+      }
+      if (typeof data === 'object') return data;
+      throw new Error('Unexpected API response shape.');
+    }
+
+    function safeParseJSON(raw) {
+      const cleaned = raw.replace(/```json|```/gi, '').trim();
+      return JSON.parse(cleaned);
+    }
+
+    function setStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle('error', isError);
+    }
+
+    function renderCard(data, type, pillar) {
+      const pillarLabels = {
+        authority: 'Authority',
+        callout: 'Call-Out',
+        value: 'Value',
+        lifestyle: 'Lifestyle',
+        freebie: 'Freebie Push',
+        workbook: 'Workbook Suite',
+      };
+
+      const typeLabels = {
+        carousel: 'Carousel',
+        reel: 'Reel',
+        static: 'Static',
+        story: 'Story',
+      };
+
+      const card = document.createElement('div');
+      card.className = 'content-card';
+
+      const slides = Array.isArray(data.slides) ? data.slides : [];
+      const overlays = Array.isArray(data.text_overlays) ? data.text_overlays : [];
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="card-type-badge">${escapeHTML(typeLabels[type] || type)}</div>
+            <div class="card-pillar-badge">${escapeHTML(pillarLabels[pillar] || pillar)}</div>
+          </div>
+          <button class="copy-all-btn">Copy Caption</button>
+        </div>
+        <div class="card-body">
+          <div class="content-section">
+            <div class="section-row"><div class="content-section-label">Hook</div></div>
+            <div class="content-text" style="font-family:'Cormorant Garamond',serif;font-size:21px;font-style:italic;color:var(--charcoal);">${escapeHTML(data.hook || '')}</div>
+          </div>
+          ${slides.length ? renderSlidesSection(slides, type === 'story' ? 'Story Sequence' : 'Slide Copy') : ''}
+          ${overlays.length ? renderOverlaysSection(overlays, data.audio_direction || '') : ''}
+          ${data.voiceover ? `
+            <div class="content-section">
+              <div class="section-row"><div class="content-section-label">Voiceover</div></div>
+              <div class="content-text">${escapeHTML(data.voiceover)}</div>
+            </div>` : ''}
+          ${data.subtext ? `
+            <div class="content-section">
+              <div class="section-row"><div class="content-section-label">Subtext</div></div>
+              <div class="content-text">${escapeHTML(data.subtext)}</div>
+            </div>` : ''}
+          <div class="content-section">
+            <div class="section-row">
+              <div class="content-section-label">Caption</div>
+              <button class="copy-btn">Copy</button>
+            </div>
+            <div class="content-text">${escapeHTML(data.caption || '')}</div>
+          </div>
+          <div class="content-section">
+            <div class="section-row"><div class="content-section-label">Visual Direction</div></div>
+            <div class="content-text" style="font-style:italic;opacity:0.75;">${escapeHTML(data.visual_direction || '')}</div>
+          </div>
+          <div class="content-section">
+            <div class="section-row">
+              <div class="content-section-label">Hashtags</div>
+              <button class="copy-btn">Copy</button>
+            </div>
+            <div class="hashtag-text">${escapeHTML(data.hashtags || '')}</div>
+          </div>
+        </div>
+      `;
+
+      const [copyCaptionTop, copyCaptionBody, copyHashtags] = card.querySelectorAll('button');
+      copyCaptionTop.addEventListener('click', () => copyText(copyCaptionTop, (data.caption || '').trim()));
+      copyCaptionBody.addEventListener('click', () => copyText(copyCaptionBody, (data.caption || '').trim()));
+      copyHashtags.addEventListener('click', () => copyText(copyHashtags, (data.hashtags || '').trim()));
+
+      outputArea.insertBefore(card, statusBox.nextSibling);
+    }
+
+    function renderSlidesSection(slides, label) {
+      return `
+        <div class="content-section">
+          <div class="section-row"><div class="content-section-label">${escapeHTML(label)}</div></div>
+          <div class="slides-list">
+            ${slides.map((slide, index) => `
+              <div class="slide-item">
+                <div class="slide-num">${index + 1}</div>
+                <div class="slide-content">
+                  <div class="slide-role">${escapeHTML(slide.role || '')}</div>
+                  <div class="slide-text">${escapeHTML(slide.text || '')}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }
+
+    function renderOverlaysSection(overlays, audioDirection) {
+      return `
+        <div class="content-section">
+          <div class="section-row"><div class="content-section-label">Text Overlays</div></div>
+          <div class="slides-list">
+            ${overlays.map((line, index) => `
+              <div class="slide-item">
+                <div class="slide-num">${index + 1}</div>
+                <div class="slide-content">
+                  <div class="slide-text">${escapeHTML(line)}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ${audioDirection ? `
+          <div class="content-section">
+            <div class="section-row"><div class="content-section-label">Audio Direction</div></div>
+            <div class="content-text">${escapeHTML(audioDirection)}</div>
+          </div>` : ''}`;
+    }
+
+    async function copyText(button, text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const original = button.textContent;
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove('copied');
+        }, 1800);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/\n/g, '<br>');
+    }
+  </script>
 </body>
 </html>
