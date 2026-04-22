@@ -5,37 +5,39 @@ export default async function handler(req, res) {
 
   try {
     const { type = 'carousel', pillar = 'authority', topic = '' } = req.body || {};
-
     const prompt = buildPrompt(type, pillar, topic);
 
-    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const openaiRes = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1200,
-        messages: [
-          { role: 'user', content: prompt }
-        ]
+        model: 'gpt-5-mini',
+        input: prompt
       })
     });
 
-    const data = await anthropicRes.json();
+    const data = await openaiRes.json();
 
-    if (!anthropicRes.ok) {
-      return res.status(anthropicRes.status).json({
+    if (!openaiRes.ok) {
+      return res.status(openaiRes.status).json({
         error: {
-          message: data?.error?.message || 'Anthropic request failed',
+          message: data?.error?.message || 'OpenAI request failed',
           details: data
         }
       });
     }
 
-    const raw = (data.content || []).map(item => item.text || '').join('').trim();
+    const raw =
+      data.output_text ||
+      (data.output || [])
+        .flatMap(item => item.content || [])
+        .map(item => item.text || '')
+        .join('')
+        .trim();
+
     const cleaned = raw.replace(/```json|```/gi, '').trim();
 
     let parsed;
@@ -71,21 +73,61 @@ TONE: Feminine but sharp. Motivating but real. Premium without sounding fake.
 NEVER: Use hustle culture language, generic guru phrases, or weak CTAs.
 DM triggers: "SYSTEM", "WORKBOOK", "FREE"
 
-Respond ONLY with a valid JSON object. No markdown. No explanation outside JSON.`;
+Return ONLY valid JSON. No markdown. No backticks. No explanation.`;
 
   const topicLine = topic
     ? `Specific topic/angle: ${topic}`
     : 'Choose the strongest, most relevant angle yourself.';
 
   const formats = {
-    carousel: `Write a ${pillar} CAROUSEL post. ${topicLine}
-JSON: {"hook":"","slides":[{"role":"","text":""}],"caption":"","hashtags":"","visual_direction":""}`,
-    reel: `Write a ${pillar} REEL. ${topicLine}
-JSON: {"hook":"","text_overlays":[""],"voiceover":"","caption":"","hashtags":"","visual_direction":"","audio_direction":""}`,
-    static: `Write a ${pillar} STATIC post. ${topicLine}
-JSON: {"hook":"","subtext":"","caption":"","hashtags":"","visual_direction":""}`,
-    story: `Write a ${pillar} STORY sequence (3 stories). ${topicLine}
-JSON: {"hook":"","slides":[{"role":"","text":""}],"caption":"","hashtags":"","visual_direction":""}`
+    carousel: `Write an Instagram ${pillar} CAROUSEL. ${topicLine}
+Return JSON exactly in this shape:
+{
+  "hook": "string",
+  "slides": [
+    { "role": "Cover", "text": "string" },
+    { "role": "Problem", "text": "string" },
+    { "role": "Reframe", "text": "string" },
+    { "role": "Value", "text": "string" },
+    { "role": "CTA", "text": "string" }
+  ],
+  "caption": "string",
+  "hashtags": "#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8",
+  "visual_direction": "string"
+}`,
+    reel: `Write an Instagram ${pillar} REEL. ${topicLine}
+Return JSON exactly in this shape:
+{
+  "hook": "string",
+  "text_overlays": ["string", "string", "string", "string"],
+  "voiceover": "string",
+  "caption": "string",
+  "hashtags": "#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8",
+  "visual_direction": "string",
+  "audio_direction": "string"
+}`,
+    static: `Write an Instagram ${pillar} STATIC POST. ${topicLine}
+Return JSON exactly in this shape:
+{
+  "hook": "string",
+  "subtext": "string",
+  "caption": "string",
+  "hashtags": "#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8",
+  "visual_direction": "string"
+}`,
+    story: `Write an Instagram ${pillar} STORY sequence. ${topicLine}
+Return JSON exactly in this shape:
+{
+  "hook": "string",
+  "slides": [
+    { "role": "Story 1", "text": "string" },
+    { "role": "Story 2", "text": "string" },
+    { "role": "Story 3", "text": "string" }
+  ],
+  "caption": "string",
+  "hashtags": "#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8",
+  "visual_direction": "string"
+}`
   };
 
   return `${brand}\n\n${formats[type] || formats.carousel}`;
